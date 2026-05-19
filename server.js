@@ -19,8 +19,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 // MongoDB Connection
 // =========================
 
+// mongoose.connect(process.env.MONGO_URI)
+// .then(() => console.log('MongoDB Connected'))
+// .catch(err => console.log('MongoDB Error:', err));
+
+
+const PORT = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('MongoDB Connected'))
+.then(() => {
+    console.log('MongoDB Connected');
+
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+
+})
 .catch(err => console.log('MongoDB Error:', err));
 
 
@@ -148,10 +161,9 @@ app.post('/api/contact', async (req, res) => {
 // Server
 // =========================
 
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+// });
 
 
