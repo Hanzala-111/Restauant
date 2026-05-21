@@ -181,8 +181,8 @@ app.post('/api/contact', async (req, res) => {
         // Send email using Resend
         await resend.emails.send({
             from: 'Restaurant <onboarding@resend.dev>',
-            to: 'marianoori2005@gmail.com' ,
-            // to: process.env.OWNER_EMAIL,
+            // to: 'marianoori2005@gmail.com' ,
+            to: process.env.OWNER_EMAIL,
             subject: 'New Contact Message',
             html: `
                 <h2>New Contact Message</h2>
