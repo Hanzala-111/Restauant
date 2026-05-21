@@ -211,6 +211,9 @@ app.post('/api/contact', async (req, res) => {
     }
 });
 
+console.log(process.env.RESEND_API_KEY);
+console.log(process.env.OWNER_EMAIL);
+
 
 // =========================
 // Server
