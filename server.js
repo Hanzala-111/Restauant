@@ -3,8 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
 const path = require('path');
+const { Resend } = require('resend');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 dotenv.config();
 
@@ -26,15 +29,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-    console.log('MongoDB Connected');
+    .then(() => {
+        console.log('MongoDB Connected');
 
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
 
-})
-.catch(err => console.log('MongoDB Error:', err));
+    })
+    .catch(err => console.log('MongoDB Error:', err));
 
 
 // =========================
@@ -76,16 +79,19 @@ const Contact = mongoose.model('Contact', contactSchema);
 // Email Transporter
 // =========================
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    family: 4, // IMPORTANT → forces IPv4
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+
+
+
+// const transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 587,
+//     secure: false,
+//     family: 4, // IMPORTANT → forces IPv4
+//     auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS
+//     }
+// });
 
 
 // const transporter = nodemailer.createTransport({
@@ -116,26 +122,33 @@ app.post('/api/reservation', async (req, res) => {
     try {
 
         const reservation = new Reservation(req.body);
+
         await reservation.save();
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.OWNER_EMAIL,
+        await resend.emails.send({
+            from: 'Restaurant <onboarding@resend.dev>',
+            to: 'yourgmail@gmail.com',
             subject: 'New Reservation',
             html: `
                 <h2>New Reservation</h2>
-                <p><strong>Name:</strong> ${req.body.name}</p>
-                <p><strong>Email:</strong> ${req.body.email}</p>
-                <p><strong>Date:</strong> ${req.body.date}</p>
-                <p><strong>Message:</strong> ${req.body.message}</p>
+                <p>Name: ${req.body.name}</p>
+                <p>Email: ${req.body.email}</p>
             `
         });
 
-        res.json({ success: true, message: 'Reservation Submitted Successfully' });
+        res.status(200).json({
+            success: true,
+            message: "Reservation submitted"
+        });
 
     } catch (error) {
-        console.log('Reservation Error:', error);
-        res.status(500).json({ success: false, message: 'Server Error' });
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
     }
 });
 
@@ -179,5 +192,3 @@ app.post('/api/contact', async (req, res) => {
 // app.listen(PORT, () => {
 //     console.log(`Server running on port ${PORT}`);
 // });
-
-
