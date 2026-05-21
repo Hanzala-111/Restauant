@@ -139,14 +139,14 @@ app.post('/api/reservation', async (req, res) => {
         // });
 
         const emailResponse = await resend.emails.send({
-    from: 'Restaurant <onboarding@resend.dev>',
-    to: process.env.OWNER_EMAIL,
-    subject: 'New Reservation',
-    html: `<h1>Test Email</h1>`
-});
+            from: 'Restaurant <onboarding@resend.dev>',
+            to: process.env.OWNER_EMAIL,
+            subject: 'New Reservation',
+            html: `<h1>Test Email</h1>`
+        });
 
-console.log(emailResponse);
-console.log("After sending email");
+        console.log(emailResponse);
+        console.log("After sending email");
 
         res.status(200).json({
             success: true,
@@ -180,7 +180,8 @@ app.post('/api/contact', async (req, res) => {
         // Send email using Resend
         await resend.emails.send({
             from: 'Restaurant <onboarding@resend.dev>',
-            to: process.env.OWNER_EMAIL,
+            to: 'marianoori2005@gmail.com' ,
+            // to: process.env.OWNER_EMAIL,
             subject: 'New Contact Message',
             html: `
                 <h2>New Contact Message</h2>
