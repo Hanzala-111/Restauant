@@ -128,23 +128,23 @@ app.post('/api/reservation', async (req, res) => {
         await reservation.save();
         console.log("Before sending email");
 
-        // await resend.emails.send({
-        //     from: 'Restaurant <onboarding@resend.dev>',
-        //     to: 'yourgmail@gmail.com',
-        //     subject: 'New Reservation',
-        //     html: `
-        //         <h2>New Reservation</h2>
-        //         <p>Name: ${req.body.name}</p>
-        //         <p>Email: ${req.body.email}</p>
-        //     `
-        // });
-
-        const emailResponse = await resend.emails.send({
+        await resend.emails.send({
             from: 'Restaurant <onboarding@resend.dev>',
-            to: process.env.OWNER_EMAIL,
+            to: 'yourgmail@gmail.com',
             subject: 'New Reservation',
-            html: `<h1>Test Email</h1>`
+            html: `
+                <h2>New Reservation</h2>
+                <p>Name: ${req.body.name}</p>
+                <p>Email: ${req.body.email}</p>
+            `
         });
+
+        // const emailResponse = await resend.emails.send({
+        //     from: 'Restaurant <onboarding@resend.dev>',
+        //     to: process.env.OWNER_EMAIL,
+        //     subject: 'New Reservation',
+        //     html: `<h1>Test Email</h1>`
+        // });
 
         console.log(emailResponse);
         console.log("After sending email");
