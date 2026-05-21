@@ -120,10 +120,12 @@ const Contact = mongoose.model('Contact', contactSchema);
 
 app.post('/api/reservation', async (req, res) => {
     try {
+        console.log("Reservation route started");
 
         const reservation = new Reservation(req.body);
 
         await reservation.save();
+        console.log("Before sending email");
 
         // await resend.emails.send({
         //     from: 'Restaurant <onboarding@resend.dev>',
@@ -144,6 +146,7 @@ app.post('/api/reservation', async (req, res) => {
 });
 
 console.log(emailResponse);
+console.log("After sending email");
 
         res.status(200).json({
             success: true,
