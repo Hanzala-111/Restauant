@@ -105,13 +105,13 @@ const Contact = mongoose.model('Contact', contactSchema);
 
 
 // test email connection (IMPORTANT DEBUG)
-transporter.verify((error, success) => {
-    if (error) {
-        console.log('Email Error:', error);
-    } else {
-        console.log('Email Server Ready');
-    }
-});
+// transporter.verify((error, success) => {
+//     if (error) {
+//         console.log('Email Error:', error);
+//     } else {
+//         console.log('Email Server Ready');
+//     }
+// });
 
 
 // =========================
@@ -158,28 +158,42 @@ app.post('/api/reservation', async (req, res) => {
 // =========================
 
 app.post('/api/contact', async (req, res) => {
+
     try {
 
+        // Save message to MongoDB
         const contact = new Contact(req.body);
         await contact.save();
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+        // Send email using Resend
+        await resend.emails.send({
+            from: 'Restaurant <onboarding@resend.dev>',
             to: process.env.OWNER_EMAIL,
             subject: 'New Contact Message',
             html: `
                 <h2>New Contact Message</h2>
+
                 <p><strong>Name:</strong> ${req.body.name}</p>
+
                 <p><strong>Email:</strong> ${req.body.email}</p>
+
                 <p><strong>Message:</strong> ${req.body.message}</p>
             `
         });
 
-        res.json({ success: true, message: 'Message Sent Successfully' });
+        res.json({
+            success: true,
+            message: 'Message Sent Successfully'
+        });
 
     } catch (error) {
+
         console.log('Contact Error:', error);
-        res.status(500).json({ success: false, message: 'Server Error' });
+
+        res.status(500).json({
+            success: false,
+            message: 'Server Error'
+        });
     }
 });
 
