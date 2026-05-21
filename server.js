@@ -1,4 +1,5 @@
 require('dotenv').config();
+console.log("NEW SERVER CODE RUNNING");
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
