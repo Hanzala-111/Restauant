@@ -5,11 +5,11 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 // const nodemailer = require('nodemailer');
 const path = require('path');
+dotenv.config();
 const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-dotenv.config();
 
 const app = express();
 
