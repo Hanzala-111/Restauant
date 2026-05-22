@@ -462,8 +462,8 @@ footer {
     }
 
     .nav-links {
-        height: 210px;
         flex-direction: column;
+        height: auto;
         transition: all 10.5s ease-out;
     }
 
